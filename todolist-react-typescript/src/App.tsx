@@ -18,11 +18,19 @@ export type TodolistType = {
   filter: FilterValuesType
 }
 
-type TasksStateType = {
+export type TasksStateType = {
   [key: string]: Array<TaskType>
 }
 
 function App() {
+
+  let todolistId1 = v1();
+  let todolistId2 = v1();
+
+  let [todolists, setTodolists] = useState<Array<TodolistType>>([
+    {id: todolistId1, title: 'what to learn', filter: 'active'},
+    {id: todolistId2, title: 'what to buy', filter: 'completed'}
+  ])
 
   function removeTask(id: string, todolistId: string) {
     let tasks = tasksObj[todolistId]
@@ -57,29 +65,6 @@ function App() {
     }
   }
 
-  function changeFilter(value: FilterValuesType, todolistId: string) {
-    let todolist = todolists.find(tl =>tl.id === todolistId);
-    if (todolist) {
-      todolist.filter = value;
-      setTodolists([...todolists])
-    }
-  }
-
-  let todolistId1 = v1();
-  let todolistId2 = v1();
-
-  let [todolists, setTodolists] = useState<Array<TodolistType>>([
-    {id: todolistId1, title: 'what to learn', filter: 'active'},
-    {id: todolistId2, title: 'what to buy', filter: 'completed'}
-  ])
-
-  const removeTodolist = (todolistId: string) => {
-    let filteredTodolist = todolists.filter(tl => tl.id !== todolistId)
-    setTodolists(filteredTodolist);
-
-    delete tasksObj[todolistId];
-    setTasks({...tasksObj})
-  }
 
   let [tasksObj, setTasks] = useState<TasksStateType>({
     [todolistId1]: [
@@ -93,6 +78,22 @@ function App() {
       {id: v1(), title: 'Angular', isDone: false}
     ]
   })
+
+  function changeFilter(value: FilterValuesType, todolistId: string) {
+    let todolist = todolists.find(tl =>tl.id === todolistId);
+    if (todolist) {
+      todolist.filter = value;
+      setTodolists([...todolists])
+    }
+  }
+
+  const removeTodolist = (todolistId: string) => {
+    let filteredTodolist = todolists.filter(tl => tl.id !== todolistId)
+    setTodolists(filteredTodolist);
+
+    delete tasksObj[todolistId];
+    setTasks({...tasksObj})
+  }
 
   function addTodolist (title: string) {
     let todolist: TodolistType = {
